@@ -1,11 +1,14 @@
-/* 
 
-.transition_circle{
-    opacity: 1;
-    transition-duration: 1s;
+
+body{
+    margin: 0px;
 }
 
-circle{
-    opacity: 0.5;
-    transition-duration: 1s;
-} */
+#main_svg{
+    border: 2px black solid;
+    margin: 0px;
+    /* width: calc(100vw-10px);
+    height: calc(100vh-20px); */
+    width: 100vw;
+    height: 100vh;
+}
