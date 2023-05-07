@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Bubblechart</title>
+	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+	<meta content="utf-8" http-equiv="encoding">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="lib/d3.v6.min.js"></script>
+</head>
+<body>
+
+<svg width="765" height="765"></svg>
+<input type="button" id="add_circle" value="Add circle">
+<script>
+var dataSet = [
+       {"x": 50,  "y": 100, "z": 10},
+       {"x": 300, "y": 150, "z": 25},
+       {"x": 275, "y": 500, "z": 5},
+       {"x": 500, "y": 330, "z": 30},
+       {"x": 310, "y": 100, "z": 40},
+       {"x": 120, "y": 380, "z": 10},
+       {"x": 100, "y": 120, "z": 30},
+       {"x": 50, "y": 200, "z": 15},
+       {"x": 200, "y": 220, "z": 40},
+       {"x": 450, "y": 500, "z": 50},
+       {"x": 650, "y": 275, "z": 25},
+       {"x": 250, "y": 350, "z": 5}]
+
+
+function draw(svg, partial_dataset){
+
+    // Exit clause: Remove elements
+    svg.exit().remove();
+
+    svg.selectAll("circle")
+        .data(partial_dataset) 	
+        .enter()     	
+        .append("circle")
+        .attr("cx", function(d) { return d.x })
+        .attr("cy", function(d) { return d.y })
+        .attr("r",   function(d) { return d.z })
+        .attr("fill", "red")
+        .attr("fill", function(d){  return d3.rgb(d.x/3,d.y/3,d.z/3) })
+        .attr("fill-opacity", 0)
+        .attr("stroke-width", "2")
+        .attr("stroke", "black")
+        .transition()
+        .duration(500)
+        .attr("fill-opacity", 1);
+
+
+    svg.selectAll("circle")
+        .data(partial_dataset)
+        .attr("cx", function(d) { return d.x })
+        .attr("cy", function(d) { return d.y })
+        .attr("r",   function(d) { return d.z })
+        .attr("fill", "red")
+        .attr("fill", function(d){  return d3.rgb(d.x/3,d.y/3,d.z/3) })
+        .attr("stroke-width", "2")
+        .attr("stroke", "black");
+
+}
+
+window.onload = (event) => {
+    var svg = d3.select("svg");
+
+    // draw(svg)
+
+    setTimeout(function() {dataSet.push({"x": 120, "y": 150, "z": 80})}, 1000);
+    
+    var partial_dataset = [];
+
+
+    setInterval(() => {
+        var partial_dataset = [];
+        dataSet.forEach((elem, index, array) => {
+            setTimeout(() => {
+                partial_dataset.push(elem);
+                draw(svg, partial_dataset);
+            }, index * 50);
+        })
+    }, 2000)
+
+}
+
+
+document.getElementById("add_circle").addEventListener("click", () => {
+    new_component = []
+    for(let i = 0; i <= 1; i++){
+        component_color = Math.floor(Math.random() * 765);
+        new_component.push(component_color);
+    }
+    component_radius = Math.floor(Math.random() * 100);
+    new_component.push(component_radius);
+    console.log(new_component);
+    new_circle = {"x": new_component[0],  "y": new_component[1], "z": new_component[2]};
+    dataSet.push(new_circle);
+    var svg = d3.select("svg");
+    draw(svg, dataSet);
+
+})
+
+
+</script>
+
+</body>
+</html>
