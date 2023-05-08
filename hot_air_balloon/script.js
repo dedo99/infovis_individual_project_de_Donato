@@ -61,111 +61,182 @@ function intro_animation(){
 
 }
 
-var selected_elements;
+function change_attributesValue_Balloon(index_one, index_two){
+    element_one = dataSet[index_one];
+    element_two = dataSet[index_two];
+    console.log(element_one);
+    console.log(element_two);
+    // scambio
+    temp_one_balloon_size = element_one.balloon_size;
+    temp_one_basket_size = element_one.basket_size;
+    temp_one_color = element_one.color;
+    element_one.balloon_size = element_two.balloon_size;
+    element_one.basket_size = element_two.basket_size;
+    element_one.color = element_two.color;
+    element_two.balloon_size = temp_one_balloon_size;
+    element_two.basket_size = temp_one_basket_size;
+    element_two.color = temp_one_color;
+    console.log(element_one);
+    console.log(element_two);
+}
 
-function selection_first_element(index){
 
+function selection_interaction_element(index){
 
     console.log("Clicked index: " + index);
-    first_HotAirBaloon = d3.select('#b' + String(index));
-    var balloon_ball = first_HotAirBaloon.select('circle');
-    var balloon_basket = first_HotAirBaloon.select('rect');
-
-    selected_elements = d3.selectAll('.selected');
     
-    
-    console.log(Array.isArray(selected_elements)); // restituisce true se elements è un array
+    var current_HotAirBaloon = d3.select('#b' + String(index));
 
+    var selected_elements = d3.selectAll('.selected');
+        
     console.log(selected_elements);
     console.log("Elementi selezionati: " + String(selected_elements.size()));
 
     if (selected_elements.size() == 0){
-        console.log(selected_elements.nodes()[0]);
-        first_HotAirBaloon = selected_elements.nodes()[0];
-        first_HotAirBaloon.attr('class', 'baloon selected');
+        // console.log(selected_elements.nodes()[0]);
+        var balloon_ball = current_HotAirBaloon.select('circle');
+        var balloon_basket = current_HotAirBaloon.select('rect');
+        current_HotAirBaloon.attr('class', 'baloon selected');
         balloon_ball.attr('fill', 'white');
         balloon_basket.attr('fill', 'white');
     }
     if (selected_elements.size() == 1){
-        if (first_HotAirBaloon.classed('selected')) {
-            first_HotAirBaloon.attr('class', 'baloon');
+        if (selected_elements.nodes()[0] === current_HotAirBaloon) {
+            current_HotAirBaloon.attr('class', 'baloon');
             var color = String(colorScale(dataSet[index].color))
             balloon_ball.attr('fill', color);
             balloon_basket.attr('fill', color);
         } else {
-            
-    
+            // avviene lo scambio dei parametri
+            selected_elements.nodes()[0].setAttribute('class', 'baloon');
+            const current_HotAirBaloon_Id = current_HotAirBaloon.attr('id');
+            const selectedElementId = selected_elements.nodes()[0].getAttribute('id');
+            const index_current = parseInt(current_HotAirBaloon_Id.substring(1));
+            const index_selected = parseInt(selectedElementId.substring(1));
+            change_attributesValue_Balloon(index_current, index_selected);
+            update_draw(svgElem);
         }
+
     }
-
-
-
-
     // console.log(first_HotAirBaloon);
 
     
 }
 
 
-function selection_second_element(){
+function update_draw(svgElement){
+
+    const divElement = d3.select("#main_svg");
+
+    // Exit clause: Remove elements
+    divElement.exit().remove();
+
+
+    // ----------------------------------------
+    // ----------------ENTER-------------------
+    // ----------------------------------------
+    divElement.selectAll(".baloon")
+    .data(dataSet)
+    .enter()
+    .append(() => svgElement.cloneNode(true))
+    .attr("id", (d, i) => "b" + i)
+    .attr("class", "baloon")
+    .attr("transform", (d) => "translate(" + xScale(d.pos_x) + "," + yScale(d.pos_y) + ")")
+    .each(function(d) {
+
+        // Modifica la posizione e le dimensioni dell'elemento SVG
+        var balloon_ball = d3.select(this).select('g circle');
+        var balloon_basket = d3.select(this).select('rect');
+
+        var radius = dimBalloonSize(d.balloon_size);
+        var width_basket = dimBasketSize(d.basket_size);
+        var height_basket = dimBasketSize(d.basket_size)/3;
+        balloon_ball.attr('r', radius);
+        balloon_basket.attr('width', width_basket);
+        balloon_basket.attr('height', height_basket);
+
+        // modifica colori
+        balloon_ball.attr('fill', String(colorScale(d.color)));
+        balloon_basket.attr('fill', String(colorScale(d.color)));
+
+        var width = Math.max(radius*2, width_basket);
+        var height = (radius*2) + height_basket + 50;
+
+        d3.select(this).attr('width', String(width + 50) + 'px');
+        d3.select(this).attr('height', String(height) + 'px');
+
+    });
+
+
     
-}
+    // ----------------------------------------
+    // ----------------UPDATE------------------
+    // ----------------------------------------
 
-function setColorFill(index, color){
-    var balloon_ball = d3.select('#' + String(index) + ' circle');
-    var balloon_basket = d3.select('#' + String(index) + ' rect');
+    divElement.selectAll(".baloon")
+    .data(dataSet)
+    .attr("id", (d, i) => "b" + i)
+    .attr("class", "baloon")
+    .attr("transform", (d) => "translate(" + xScale(d.pos_x) + "," + yScale(d.pos_y) + ")")
+    .each(function(d) {
 
-    balloon_ball.attr("fill", colorScale(color));
-    ba
-}
+        // Modifica la posizione e le dimensioni dell'elemento SVG
+        var balloon_ball = d3.select(this).select('g circle');
+        var balloon_basket = d3.select(this).select('rect');
 
-window.onload = (event) => {
-    var svg = d3.select("svg");
-    const divElement = document.getElementById("main_svg");
-    
+        var radius = dimBalloonSize(d.balloon_size);
+        var width_basket = dimBasketSize(d.basket_size);
+        var height_basket = dimBasketSize(d.basket_size)/3;
+        balloon_ball.attr('r', radius);
+        balloon_basket.attr('width', width_basket);
+        balloon_basket.attr('height', height_basket);
+
+        // modifica colori
+        balloon_ball.attr('fill', String(colorScale(d.color)));
+        balloon_basket.attr('fill', String(colorScale(d.color)));
+
+        var width = Math.max(radius*2, width_basket);
+        var height = (radius*2) + height_basket + 50;
+
+        d3.select(this).attr('width', String(width + 50) + 'px');
+        d3.select(this).attr('height', String(height) + 'px');
+
+    });
+
+  
+  
+  }
+  
+
+
+
+
+var svgElem;
+
+// ----------------------------------------------------------------------
+// ---------------------CARICAMENTO DELLA PAGINA-------------------------
+// ----------------------------------------------------------------------
+
+window.onload = (event) => {  
     
     // Carica il file SVG tramite fetch e inserisce le mongolfiere nel DOM
     fetch("./figures/hot_air_baloon.svg")
     .then(response => response.text())
     .then(svgText => {
-        
-        dataSet.forEach(function(element, index, array) {
 
-            // Il testo viene quindi analizzato come un documento SVG
-            // utilizzando DOMParser, e l'elemento SVG risultante viene 
-            // inserito all'interno del div 
-            const parser = new DOMParser();
-            const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
-            const svgElement = svgDoc.documentElement;
-            divElement.appendChild(svgElement);
-                        
-            
-            // Modifica la posizione e le dimensioni dell'elemento SVG
-            svgElement.setAttribute('id', "b" + String(index))
-            svgElement.setAttribute('class', 'baloon');
-            var balloon_ball = svgElement.querySelector('g circle');
-            var balloon_basket = svgElement.querySelector('rect');
-            
-            var radius = dimBalloonSize(element.balloon_size);
-            var width_basket = dimBasketSize(element.basket_size);
-            var height_basket = dimBasketSize(element.basket_size)/3;
-            balloon_ball.attributes.r.value = radius;
-            balloon_basket.attributes.width.value = width_basket;
-            balloon_basket.attributes.height.value = height_basket;
+        // Il testo viene quindi analizzato come un documento SVG
+        // utilizzando DOMParser, e l'elemento SVG risultante viene 
+        // inserito all'interno del div 
+        const parser = new DOMParser();
+        const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+        const svgElement = svgDoc.documentElement;
+        svgElem = svgElement;
+        console.log(svgElement);
 
-            // modifica colori
-            balloon_ball.setAttribute('fill', String(colorScale(element.color))); // imposta il colore rosso
-            balloon_basket.setAttribute('fill', String(colorScale(element.color))); // imposta il colore blu
-
-            var width = Math.max(radius*2, width_basket);
-            var height = (radius*2) + height_basket + 50;
-            
-            svgElement.setAttribute('width', String(width + 50) + 'px');
-            svgElement.setAttribute('height', String(height) + 'px');
-            svgElement.setAttribute('transform', 'translate('+ String(xScale(element.pos_x)) + ',' + String(yScale(element.pos_y)) +')');
-        });
+        update_draw(svgElement);
 
         intro_animation();
+
     });
 
 
@@ -178,7 +249,7 @@ window.onload = (event) => {
 
         for(let i = 0; i < baloon_selection.length; i++) {
             baloon_selection[i].addEventListener("click", () => {
-                selection_first_element(i);
+                selection_interaction_element(i);
             });
         }
 
