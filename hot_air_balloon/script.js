@@ -205,7 +205,7 @@ function update_draw(svgElement){
 
   
   
-  }
+}
   
 
 
