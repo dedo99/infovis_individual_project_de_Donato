@@ -34,14 +34,14 @@ console.log("Window height: " + windowHeight);
 
 // mapping su scala lineare dei valori asse X in input sulla base
 // della dimensione orizzontale della finistra
-const xScale = d3.scaleLinear().domain([0, maxPosX + 150]).range([0, windowWidth]);
+const xScale = d3.scaleLinear().domain([0, windowWidth]).range([0, maxPosX - 100]);
 
 // mapping su scala lineare dei valori asse Y in input sulla base
 // della dimensione verticale della finistra
-const yScale = d3.scaleLinear().domain([0, maxPosY + 150]).range([0, windowHeight]);
+const yScale = d3.scaleLinear().domain([0, windowHeight]).range([0, maxPosY - 100]);
 
-const dimBalloonSize = d3.scaleLinear().domain([0, maxBalloon_size]).range([0, 100]);
-const dimBasketSize = d3.scaleLinear().domain([0, maxBasket_size]).range([0, 100]);
+const dimBalloonSize = d3.scaleLinear().domain([0, maxBalloon_size]).range([0, 120]);
+const dimBasketSize = d3.scaleLinear().domain([0, maxBasket_size]).range([0, 120]);
 
 // scala di colori dell'arcobaleno compresi tra i valori 0 e 255
 const colorScale = d3.scaleSequential(d3.interpolateRainbow).domain([0, 255]);
@@ -69,13 +69,13 @@ function change_attributesValue_Balloon(index_one, index_two){
     // scambio
     temp_one_balloon_size = element_one.balloon_size;
     temp_one_basket_size = element_one.basket_size;
-    temp_one_color = element_one.color;
+    // temp_one_color = element_one.color;
     element_one.balloon_size = element_two.balloon_size;
     element_one.basket_size = element_two.basket_size;
-    element_one.color = element_two.color;
+    // element_one.color = element_two.color;
     element_two.balloon_size = temp_one_balloon_size;
     element_two.basket_size = temp_one_basket_size;
-    element_two.color = temp_one_color;
+    // element_two.color = temp_one_color;
     console.log(element_one);
     console.log(element_two);
 }
@@ -132,7 +132,6 @@ function change_animation(){
 
     divElement.selectAll(".selected")
     .attr("class", "baloon")
-    .attr("transform", (d) => "translate(" + xScale(d.pos_x) + "," + yScale(d.pos_y) + ")")
     .each(function(d) {
 
         // Modifica la posizione e le dimensioni dell'elemento SVG
@@ -140,49 +139,57 @@ function change_animation(){
         var balloon_basket = d3.select(this).select('rect');
         var balloon_line = d3.select(this).select('line');
 
-        // Aggiornamento dimensioni pallone
+        //calcolo parametri necessari
         var radius = dimBalloonSize(d.balloon_size);
-        // console.log(radius)
-        balloon_ball.attr('r', radius);
         cx_ball = parseFloat(balloon_ball.attr('cx'));
         cy_ball = parseFloat(balloon_ball.attr('cy'));
-
-
-        // Aggiornamento dimensioni cavo
-        console.log(cy_ball);
-        balloon_line.attr('y1', cy_ball + radius);
-        balloon_line.attr('y2', cy_ball + radius + 30);
-
-        // Aggiornamento dimensioni cesto
         var width_basket = dimBasketSize(d.basket_size);
         var height_basket = dimBasketSize(d.basket_size)/3;
-        balloon_basket.attr('width', width_basket);
-        balloon_basket.attr('height', height_basket);
-        balloon_basket.attr('x', cx_ball - width_basket/2);
-        balloon_basket.attr('y', cy_ball + radius + 30);
 
 
-        // modifica colori
-        balloon_ball.attr('fill', String(colorScale(d.color)));
-        balloon_basket.attr('fill', String(colorScale(d.color)));
-
+        // modifica area in cui viene rappresentata la mongolfiera
         var width = Math.max(radius*2, width_basket) + 20;
         var height = (radius*2) + height_basket + 70;
         var top_left_x = cx_ball - width/2;
         var top_left_y = cy_ball - radius - 20;
 
-
         d3.select(this).attr('width', String(width + 50) + 'px');
         d3.select(this).attr('height', String(height) + 'px');
-        d3.select(this).attr('viewBox', top_left_x + ' ' + top_left_y + ' ' + width + ' ' + height);
+        d3.select(this).transition()
+        .duration(2000)
+        .attr('viewBox', top_left_x + ' ' + top_left_y + ' ' + width + ' ' + height);
 
-    })
-    .attr("fill-opacity", 0)
-    // Aggiungi una transizione che dura 2 secondi
-    .transition()
-    .duration(2000)
-    // Imposta l'opacità e l'opacità di riempimento a 1
-    .attr("fill-opacity", 1);
+
+        // Aggiornamento dimensioni pallone
+        // console.log(radius)
+        balloon_ball.transition()
+        .duration(2000)
+        .attr('r', radius);
+
+
+        // Aggiornamento dimensioni cavo
+        balloon_line.transition()
+        .duration(2000)
+        .attr('y1', cy_ball + radius)
+        .attr('y2', cy_ball + radius + 30);
+
+        
+        // Aggiornamento dimensioni cesto
+        balloon_basket.transition()
+        .duration(2000)
+        .attr('width', width_basket)
+        .attr('height', height_basket)
+        .attr('x', cx_ball - width_basket/2)
+        .attr('y', cy_ball + radius + 30);
+
+
+        // modifica colori
+        balloon_ball.attr('fill', String(colorScale(d.color)));
+        balloon_basket.attr('fill', String(colorScale(d.color)));
+        
+       
+
+    });
   
 
 }
