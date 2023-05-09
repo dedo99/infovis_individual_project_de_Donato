@@ -108,19 +108,83 @@ function selection_interaction_element(index){
             balloon_basket.attr('fill', color);
         } else {
             // avviene lo scambio dei parametri
-            selected_elements.nodes()[0].setAttribute('class', 'baloon');
+            current_HotAirBaloon.attr('class', 'baloon selected');
+            // selected_elements.nodes()[0].setAttribute('class', 'baloon');
             const current_HotAirBaloon_Id = current_HotAirBaloon.attr('id');
             const selectedElementId = selected_elements.nodes()[0].getAttribute('id');
             const index_current = parseInt(current_HotAirBaloon_Id.substring(1));
             const index_selected = parseInt(selectedElementId.substring(1));
             change_attributesValue_Balloon(index_current, index_selected);
-            update_draw(svgElem);
+            // update_draw(svgElem);
+            change_animation();
         }
 
     }
-    // console.log(first_HotAirBaloon);
-
     
+}
+
+
+
+function change_animation(){
+
+    const divElement = d3.select("#main_svg");
+
+
+    divElement.selectAll(".selected")
+    .attr("class", "baloon")
+    .attr("transform", (d) => "translate(" + xScale(d.pos_x) + "," + yScale(d.pos_y) + ")")
+    .each(function(d) {
+
+        // Modifica la posizione e le dimensioni dell'elemento SVG
+        var balloon_ball = d3.select(this).select('circle');
+        var balloon_basket = d3.select(this).select('rect');
+        var balloon_line = d3.select(this).select('line');
+
+        // Aggiornamento dimensioni pallone
+        var radius = dimBalloonSize(d.balloon_size);
+        // console.log(radius)
+        balloon_ball.attr('r', radius);
+        cx_ball = parseFloat(balloon_ball.attr('cx'));
+        cy_ball = parseFloat(balloon_ball.attr('cy'));
+
+
+        // Aggiornamento dimensioni cavo
+        console.log(cy_ball);
+        balloon_line.attr('y1', cy_ball + radius);
+        balloon_line.attr('y2', cy_ball + radius + 30);
+
+        // Aggiornamento dimensioni cesto
+        var width_basket = dimBasketSize(d.basket_size);
+        var height_basket = dimBasketSize(d.basket_size)/3;
+        balloon_basket.attr('width', width_basket);
+        balloon_basket.attr('height', height_basket);
+        balloon_basket.attr('x', cx_ball - width_basket/2);
+        balloon_basket.attr('y', cy_ball + radius + 30);
+
+
+        // modifica colori
+        balloon_ball.attr('fill', String(colorScale(d.color)));
+        balloon_basket.attr('fill', String(colorScale(d.color)));
+
+        var width = Math.max(radius*2, width_basket) + 20;
+        var height = (radius*2) + height_basket + 70;
+        var top_left_x = cx_ball - width/2;
+        var top_left_y = cy_ball - radius - 20;
+
+
+        d3.select(this).attr('width', String(width + 50) + 'px');
+        d3.select(this).attr('height', String(height) + 'px');
+        d3.select(this).attr('viewBox', top_left_x + ' ' + top_left_y + ' ' + width + ' ' + height);
+
+    })
+    .attr("fill-opacity", 0)
+    // Aggiungi una transizione che dura 2 secondi
+    .transition()
+    .duration(2000)
+    // Imposta l'opacità e l'opacità di riempimento a 1
+    .attr("fill-opacity", 1);
+  
+
 }
 
 
@@ -241,7 +305,13 @@ function update_draw(svgElement){
         d3.select(this).attr('height', String(height) + 'px');
         d3.select(this).attr('viewBox', top_left_x + ' ' + top_left_y + ' ' + width + ' ' + height);
 
-    });
+    })
+    .attr("fill-opacity", 0)
+    // Aggiungi una transizione che dura 2 secondi
+    .transition()
+    .duration(2000)
+    // Imposta l'opacità e l'opacità di riempimento a 1
+    .attr("fill-opacity", 1);
   
   
 }
