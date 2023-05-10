@@ -8,14 +8,14 @@
 var dataSet = [
     {"pos_x": 50, "pos_y": 150, "balloon_size": 80, "basket_size": 60, "color": 255},
     {"pos_x": 200, "pos_y": 50, "balloon_size": 100, "basket_size": 80, "color": 0},
-    {"pos_x": 854, "pos_y": 420, "balloon_size": 60, "basket_size": 50, "color": 150},
-    {"pos_x": 250, "pos_y": 200, "balloon_size": 120, "basket_size": 70, "color": 50},
+    {"pos_x": 600, "pos_y": 50, "balloon_size": 60, "basket_size": 50, "color": 150},
+    {"pos_x": 400, "pos_y": 400, "balloon_size": 120, "basket_size": 70, "color": 50},
     {"pos_x": 150, "pos_y": 600, "balloon_size": 70, "basket_size": 50, "color": 200},
     {"pos_x": 75, "pos_y": 50, "balloon_size": 90, "basket_size": 60, "color": 100},
     {"pos_x": 225, "pos_y": 150, "balloon_size": 80, "basket_size": 70, "color": 180},
-    {"pos_x": 750, "pos_y": 200, "balloon_size": 110, "basket_size": 80, "color": 20},
-    {"pos_x": 175, "pos_y": 100, "balloon_size": 60, "basket_size": 50, "color": 230},
-    {"pos_x": 300, "pos_y": 500, "balloon_size": 100, "basket_size": 70, "color": 120}
+    {"pos_x": 600, "pos_y": 200, "balloon_size": 110, "basket_size": 80, "color": 20},
+    {"pos_x": 175, "pos_y": 300, "balloon_size": 60, "basket_size": 50, "color": 230},
+    {"pos_x": 200, "pos_y": 500, "balloon_size": 100, "basket_size": 70, "color": 120}
 ]
 
 
@@ -24,6 +24,7 @@ var maxPosX = d3.max(dataSet, function(d) { return d.pos_x; });
 var maxPosY = d3.max(dataSet, function(d) { return d.pos_y; });
 var maxBalloon_size = d3.max(dataSet, function(d) { return d.balloon_size; });
 var maxBasket_size = d3.max(dataSet, function(d) { return d.basket_size; });
+
 
 // Get the browser window size
 var windowWidth = window.innerWidth;
@@ -45,6 +46,11 @@ const dimBasketSize = d3.scaleLinear().domain([0, maxBasket_size]).range([0, 120
 
 // scala di colori dell'arcobaleno compresi tra i valori 0 e 255
 const colorScale = d3.scaleSequential(d3.interpolateRainbow).domain([0, 255]);
+
+
+var maxRadius = dimBalloonSize(maxBalloon_size);
+var maxWidth_basket = dimBasketSize(maxBasket_size);
+var maxHeight_basket = dimBasketSize(maxBasket_size)/3;
 
 
 
@@ -157,8 +163,8 @@ function update_draw(svgElement){
         var width_basket = dimBasketSize(d.basket_size);
         var height_basket = dimBasketSize(d.basket_size)/3;
 
-        var width = Math.max(radius*2, width_basket) + 20;
-        var height = (radius*2) + height_basket + 70;
+        var width = Math.max(maxRadius*2, maxWidth_basket) + 20;
+        var height = (maxRadius*2) + maxHeight_basket + 70;
         var top_left_x = 0;
         var top_left_y = 0;
 
@@ -220,8 +226,8 @@ function update_draw(svgElement){
         
         
         // modifica area in cui viene rappresentata la mongolfiera
-        var width = Math.max(radius*2, width_basket) + 20;
-        var height = (radius*2) + height_basket + 70;
+        var width = Math.max(maxRadius*2, maxWidth_basket) + 20;
+        var height = (maxRadius*2) + maxHeight_basket + 70;
         var top_left_x = 0;
         var top_left_y = 0;
 
