@@ -156,12 +156,19 @@ function update_draw(svgElement){
         // Modifica la posizione e le dimensioni dell'elemento SVG
         var balloon_ball = d3.select(this).select('circle');
         var balloon_basket = d3.select(this).select('rect');
-        var balloon_line = d3.select(this).select('line');
+        var left_rope_balloon = d3.select(this).select('#left_rope_balloon');
+        var right_rope_balloon = d3.select(this).select('#right_rope_balloon');
+        var left_line_balloon = d3.select(this).select('#left_line_balloon');
+        var right_line_balloon = d3.select(this).select('#right_line_balloon');
+        var central_line_balloon = d3.select(this).select('#central_line_balloon');
+        var left_rope_basket = d3.select(this).select('#left_rope_basket');
+        var right_rope_basket = d3.select(this).select('#right_rope_basket');
 
         // Aggiornamento dimensioni pallone
         var radius = dimBalloonSize(d.balloon_size);
         var width_basket = dimBasketSize(d.basket_size);
         var height_basket = dimBasketSize(d.basket_size)/3;
+        var distance_btw_ball_basket = 30;
 
         var width = Math.max(maxRadius*2, maxWidth_basket) + 20;
         var height = (maxRadius*2) + maxHeight_basket + 70;
@@ -179,25 +186,48 @@ function update_draw(svgElement){
         var cy_ball = parseFloat(radius + 20);
         balloon_ball.attr('r', radius).attr('cx', cx_ball).attr('cy', cy_ball);
 
-
-        // Aggiornamento dimensioni cavo
-        console.log(cy_ball);
-        balloon_line.attr('y1', cy_ball + radius)
-        .attr('y2', cy_ball + radius + 30)
+        // Aggiornamento linee dentro il pallone
+        left_line_balloon.attr('d', "M" + cx_ball + " " + (cy_ball+radius) + " Q " + (cx_ball-radius-20) + " " + cy_ball + ", " + cx_ball + " " + (cy_ball-radius));
+        right_line_balloon.attr('d', "M" + cx_ball + " " + (cy_ball+radius) + " Q " + (cx_ball+radius+20) + " " + cy_ball + ", " + cx_ball + " " + (cy_ball-radius));
+        central_line_balloon.attr('y1', cy_ball - radius)
+        .attr('y2', cy_ball + radius)
         .attr('x1', cx_ball)
         .attr('x2', cx_ball);
+
+        // Aggiornamento dimensioni cavo sinistro
+        left_rope_balloon.attr('y1', cy_ball)
+        .attr('y2', cy_ball + radius + distance_btw_ball_basket + height_basket/3)
+        .attr('x1', cx_ball - radius)
+        .attr('x2', cx_ball - width_basket/2);
         
-        
+        // Aggiornamento dimensioni cavo destro
+        right_rope_balloon.attr('y1', cy_ball)
+        .attr('y2', cy_ball + radius + distance_btw_ball_basket + height_basket/3)
+        .attr('x1', cx_ball + radius)
+        .attr('x2', cx_ball + width_basket/2);
+
         // Aggiornamento dimensioni cesto
         balloon_basket.attr('width', width_basket);
         balloon_basket.attr('height', height_basket);
         balloon_basket.attr('x', cx_ball - width_basket/2);
         balloon_basket.attr('y', cy_ball + radius + 30);
 
+        // Aggiornamento dimensioni cavi cesto
+        left_rope_basket.attr('y1', cy_ball + radius + 30)
+        .attr('y2', cy_ball + radius + 30 + height_basket)
+        .attr('x1', cx_ball - width_basket/5)
+        .attr('x2', cx_ball - width_basket/5);
+
+        right_rope_basket.attr('y1', cy_ball + radius + 30)
+        .attr('y2', cy_ball + radius + 30 + height_basket)
+        .attr('x1', cx_ball + width_basket/5)
+        .attr('x2', cx_ball + width_basket/5);
+
 
         // modifica colori
         balloon_ball.attr('fill', String(colorScale(d.color)));
         balloon_basket.attr('fill', String(colorScale(d.color)));
+
 
 
     });
@@ -217,12 +247,19 @@ function update_draw(svgElement){
         // Modifica la posizione e le dimensioni dell'elemento SVG
         var balloon_ball = d3.select(this).select('circle');
         var balloon_basket = d3.select(this).select('rect');
-        var balloon_line = d3.select(this).select('line');
+        var left_rope_balloon = d3.select(this).select('#left_rope_balloon');
+        var right_rope_balloon = d3.select(this).select('#right_rope_balloon');
+        var left_line_balloon = d3.select(this).select('#left_line_balloon');
+        var right_line_balloon = d3.select(this).select('#right_line_balloon');
+        var central_line_balloon = d3.select(this).select('#central_line_balloon');
+        var left_rope_basket = d3.select(this).select('#left_rope_basket');
+        var right_rope_basket = d3.select(this).select('#right_rope_basket');
 
         //calcolo parametri necessari
         var radius = dimBalloonSize(d.balloon_size);
         var width_basket = dimBasketSize(d.basket_size);
         var height_basket = dimBasketSize(d.basket_size)/3;
+        var distance_btw_ball_basket = 30;
         
         
         // modifica area in cui viene rappresentata la mongolfiera
@@ -252,11 +289,38 @@ function update_draw(svgElement){
         .attr('fill', String(colorScale(d.color)));
 
 
-        // Aggiornamento dimensioni cavo
-        balloon_line.transition()
+        // Aggiornamento dimensioni cavo sinistro
+        console.log(cy_ball);
+        left_rope_balloon.transition()
         .duration(2000)
-        .attr('y1', cy_ball + radius)
-        .attr('y2', cy_ball + radius + 30)
+        .attr('y1', cy_ball)
+        .attr('y2', cy_ball + radius + distance_btw_ball_basket + height_basket/3)
+        .attr('x1', cx_ball - radius)
+        .attr('x2', cx_ball - width_basket/2);
+        
+        // Aggiornamento dimensioni cavo destro
+        console.log(cy_ball);
+        right_rope_balloon.transition()
+        .duration(2000)
+        .attr('y1', cy_ball)
+        .attr('y2', cy_ball + radius + distance_btw_ball_basket + height_basket/3)
+        .attr('x1', cx_ball + radius)
+        .attr('x2', cx_ball + width_basket/2);
+
+
+        // Aggiornamento linee dentro il pallone
+        left_line_balloon.transition()
+        .duration(2000)
+        .attr('d', "M" + cx_ball + " " + (cy_ball+radius) + " Q " + (cx_ball-radius-20) + " " + cy_ball + ", " + cx_ball + " " + (cy_ball-radius));
+        
+        right_line_balloon.transition()
+        .duration(2000)
+        .attr('d', "M" + cx_ball + " " + (cy_ball+radius) + " Q " + (cx_ball+radius+20) + " " + cy_ball + ", " + cx_ball + " " + (cy_ball-radius));
+        
+        central_line_balloon.transition()
+        .duration(2000)
+        .attr('y1', cy_ball - radius)
+        .attr('y2', cy_ball + radius)
         .attr('x1', cx_ball)
         .attr('x2', cx_ball);
 
@@ -269,6 +333,22 @@ function update_draw(svgElement){
         .attr('x', cx_ball - width_basket/2)
         .attr('y', cy_ball + radius + 30)
         .attr('fill', String(colorScale(d.color)));
+
+
+        // Aggiornamento dimensioni cavi cesto
+        left_rope_basket.transition()
+        .duration(2000)
+        .attr('y1', cy_ball + radius + 30)
+        .attr('y2', cy_ball + radius + 30 + height_basket)
+        .attr('x1', cx_ball - width_basket/5)
+        .attr('x2', cx_ball - width_basket/5);
+
+        right_rope_basket.transition()
+        .duration(2000)
+        .attr('y1', cy_ball + radius + 30)
+        .attr('y2', cy_ball + radius + 30 + height_basket)
+        .attr('x1', cx_ball + width_basket/5)
+        .attr('x2', cx_ball + width_basket/5);
         
     });
   
@@ -286,7 +366,7 @@ var svgElem;
 window.onload = (event) => {  
     
     // Carica il file SVG tramite fetch e inserisce le mongolfiere nel DOM
-    fetch("./figures/custom_hot_air_baloon.svg")
+    fetch("./figures/custom_details_hot_air_balloon.svg")
     .then(response => response.text())
     .then(svgText => {
 
