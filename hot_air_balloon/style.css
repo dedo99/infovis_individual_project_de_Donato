@@ -1,14 +1,21 @@
 
 
+html{
+    margin: 0px;
+}
+
 body{
     margin: 0px;
 }
 
 #main_svg{
-    border: 2px black solid;
+    /* border: 2px black solid; */
     margin: 0px;
     /* width: calc(100vw-10px);
     height: calc(100vh-20px); */
     width: 100vw;
     height: 100vh;
+    background-image:url('images/pexels-max-andrey-1254736.jpg');
+    background-size: cover;
 }
+
