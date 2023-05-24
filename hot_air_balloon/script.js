@@ -81,7 +81,13 @@ function change_attributesValue_Balloon(index_one, index_two){
 
 
 
+var is_Animation = false;
+
 function selection_interaction_element(index){
+
+    if (is_Animation){
+        return
+    }
 
     console.log("Clicked index: " + index);
     
@@ -101,6 +107,7 @@ function selection_interaction_element(index){
         balloon_basket.transition().duration(500).attr('fill', 'white');
     }
     if (selected_elements.size() == 1){
+        is_Animation = true;
         if (selected_elements.nodes()[0] === current_HotAirBaloon) {
             current_HotAirBaloon.attr('class', 'baloon');
             var color = String(colorScale(dataSet[index].color))
@@ -118,7 +125,7 @@ function selection_interaction_element(index){
             update_draw(svgElem);
             // change_animation();
         }
-
+        setTimeout(() => is_Animation = false, 2000);
     }
     
 }
