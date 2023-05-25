@@ -442,6 +442,9 @@ window.onload = (event) => {
     }, dataSet.length * 100);
 
 
+    // ------------------------------------------------------------------
+    // Gestione comparsa finistra con descrizione per task affrontato
+    // ------------------------------------------------------------------
 
     var consegna = document.getElementById("consegna");
 
@@ -464,8 +467,11 @@ window.onload = (event) => {
         if (currentTop == '0px'){
             // Modificare il valore del parametro top
             svgElement.style.top = height_consegna;
+            div_consegna.style.color = 'black'
         } else {
             svgElement.style.top = '0px';
+            div_consegna.style.color = 'white'
+
         }
 
         console.log('Nuovo valore del parametro top:', svgElement.style.top);
