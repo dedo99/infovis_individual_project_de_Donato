@@ -10,7 +10,7 @@ var dataSet = [
     {"pos_x": 200, "pos_y": 50, "balloon_size": 100, "basket_size": 80, "color": 0},
     {"pos_x": 600, "pos_y": 50, "balloon_size": 60, "basket_size": 50, "color": 150},
     {"pos_x": 400, "pos_y": 400, "balloon_size": 120, "basket_size": 70, "color": 50},
-    {"pos_x": 150, "pos_y": 600, "balloon_size": 70, "basket_size": 50, "color": 200},
+    {"pos_x": 100, "pos_y": 600, "balloon_size": 70, "basket_size": 50, "color": 200},
     {"pos_x": 75, "pos_y": 50, "balloon_size": 90, "basket_size": 60, "color": 100},
     {"pos_x": 300, "pos_y": 245, "balloon_size": 80, "basket_size": 70, "color": 180},
     {"pos_x": 600, "pos_y": 400, "balloon_size": 110, "basket_size": 80, "color": 20},
@@ -18,6 +18,12 @@ var dataSet = [
     {"pos_x": 200, "pos_y": 500, "balloon_size": 100, "basket_size": 70, "color": 120}
 ]
 
+// Dimensioni della pagina del browser
+var windowWidth = document.documentElement.clientWidth;
+var windowHeight = document.documentElement.clientHeight;
+
+console.log("Window width: " + windowWidth);
+console.log("Window height: " + windowHeight);
 
 // Ottenere i valori massimi per pos_x e pos_y
 var maxPosX = d3.max(dataSet, function(d) { return d.pos_x; });
@@ -25,9 +31,22 @@ var maxPosY = d3.max(dataSet, function(d) { return d.pos_y; });
 var maxBalloon_size = d3.max(dataSet, function(d) { return d.balloon_size; });
 var maxBasket_size = d3.max(dataSet, function(d) { return d.basket_size; });
 
-// scalatura delle dimensioni del pallone e del cesto
-const dimBalloonSize = d3.scaleLinear().domain([0, maxBalloon_size]).range([0, 120]);
-const dimBasketSize = d3.scaleLinear().domain([0, maxBasket_size]).range([0, 120]);
+if (windowWidth > 1000){
+    // scalatura delle dimensioni del pallone e del cesto
+    var dimBalloonSize = d3.scaleLinear().domain([0, maxBalloon_size]).range([0, windowWidth/14]);
+    var dimBasketSize = d3.scaleLinear().domain([0, maxBasket_size]).range([0, windowWidth/14]);
+    console.log("Maggiore di 1000")
+} else{
+    // scalatura delle dimensioni del pallone e del cesto
+    var dimBalloonSize = d3.scaleLinear().domain([0, maxBalloon_size]).range([0, windowWidth/10]);
+    var dimBasketSize = d3.scaleLinear().domain([0, maxBasket_size]).range([0, windowWidth/10]);
+    console.log("Minore di 1000")
+}
+
+window.addEventListener('resize', function () { 
+    window.location.reload(); 
+});
+
 
 // scala di colori dell'arcobaleno compresi tra i valori 0 e 255
 const colorScale = d3.scaleSequential(d3.interpolateRainbow).domain([0, 255]);
@@ -41,12 +60,6 @@ var maxHeight_basket = dimBasketSize(maxBasket_size)/3;
 var maxHeight = (maxRadius*2) + maxHeight_basket + 70;
 var maxWidth = Math.max(maxRadius*2, maxWidth_basket) + 20;
 
-// Dimensioni della pagina del browser
-var windowWidth = document.documentElement.clientWidth;
-var windowHeight = document.documentElement.clientHeight;
-
-console.log("Window width: " + windowWidth);
-console.log("Window height: " + windowHeight);
 
 // mapping su scala lineare dei valori asse X in input sulla base
 // della dimensione orizzontale della finistra
