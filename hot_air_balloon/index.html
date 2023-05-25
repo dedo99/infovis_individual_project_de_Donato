@@ -9,7 +9,23 @@
     <script src="script.js"></script>
 </head>
 <body>
-    <svg id="main_svg"></svg>
+    <div id="div_consegna">
+        <p id="testo_consegna">Crea un file json con dei dati multivariati: ci sono 10 data-cases e ogni data-case ha cinque variabili quantitative
+            i cui valori sono tutti positivi. In base a questi dati disegna 10 mongolfiere nell'area di disegno (basta la silhouette,
+            ogni mongolfiera corrisponde ad un data-case). La prima variabile determina la posizione orizzontale della mongolfiera,
+            la seconda variabile la posizione verticale, la terza variabile la grandezza del pallone della mongolfiera,
+            la quarta variabile la grandezza del cesto della mongolfiera, e la quinta variabile il colore della mongolfiera.
+            Facendo click con il pulsante sinistro su una mongolfiera questa diventa bianca (un colore non utilizzato).
+            Facendo click su una seconda mongolfiera le due mongolfiere si scambiano le variabili con l'eccezione delle 
+            variabili uno e due usate per la posizione e della variabile cinque usata per il colore. Fai in modo che i 
+            cambi di dimensioni delle mongolfiere avvengano con un'animazione fluida. Usa le scale d3.js per mappare 
+            l'intervallo dei valori delle variabili (che deve esssere arbitrario) sull'intervallo dei valori delle coordinate,
+            che dipende dalla tua interfaccia.</p>
+    </div>
+    <svg id="main_svg" style="position: absolute; top: 0; left: 0; z-index: 2;">
+        <rect x="0" y="0" width="360" height="50" fill="lightgray" rx="10" ry="10"/>
+        <text x="20" y="30" font-size="16" font-family="Arial" fill="black">Andrea de Donato - <a id="consegna" class="link"><tspan fill="blue">Consegna</tspan></a> - <a class="link" href="https://github.com/dedo99/infovis_individual_project_de_Donato"><tspan fill="red">Link GitHub</tspan></a></text>
+    </svg>
       
       
       

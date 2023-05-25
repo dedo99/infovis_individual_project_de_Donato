@@ -10,11 +10,19 @@ body{
 }
 
 #main_svg{
+    display: block;
     margin: 0px;
     padding: 0px;
     /* width: 100vw;
     height: 100vh; */
     background-image:url('images/pexels-max-andrey-1254736.jpg');
     background-size: cover;
+}
+
+#div_consegna{
+    height: auto;
+    width: auto;
+    display: block;
+    padding: 5px 10px;
 }
 

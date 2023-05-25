@@ -43,10 +43,6 @@ if (windowWidth > 1000){
     console.log("Minore di 1000")
 }
 
-window.addEventListener('resize', function () { 
-    window.location.reload(); 
-});
-
 
 // scala di colori dell'arcobaleno compresi tra i valori 0 e 255
 const colorScale = d3.scaleSequential(d3.interpolateRainbow).domain([0, 255]);
@@ -69,6 +65,15 @@ const xScale = d3.scaleLinear().domain([0, maxPosX]).range([0, windowWidth - max
 // della dimensione verticale della finistra
 const yScale = d3.scaleLinear().domain([0, maxPosY]).range([0, windowHeight - maxHeight]);
 
+
+
+/////////////////////////////////////
+////////// EVENT LISTENER ///////////
+/////////////////////////////////////
+
+window.addEventListener('resize', function () { 
+    window.location.reload(); 
+});
 
 
 
@@ -435,5 +440,37 @@ window.onload = (event) => {
         }
 
     }, dataSet.length * 100);
+
+
+
+    var consegna = document.getElementById("consegna");
+
+    consegna.addEventListener('click', () => {
+        // Ottenere il riferimento all'elemento <svg> utilizzando l'ID
+        var svgElement = document.getElementById('main_svg');
+
+        // Ottenere il riferimento all'elemento <div> utilizzando l'ID o un altro selettore
+        var div_consegna = document.getElementById('div_consegna');
+
+        // Ottenere l'oggetto che rappresenta i valori di stile calcolati
+        var consegnaStyle = window.getComputedStyle(div_consegna);
+
+        // Ottenere i valori di stile specifici
+        var height_consegna = consegnaStyle.height;
+
+        // Ottenere il valore corrente del parametro top
+        var currentTop = svgElement.style.top;
+
+        if (currentTop == '0px'){
+            // Modificare il valore del parametro top
+            svgElement.style.top = height_consegna;
+        } else {
+            svgElement.style.top = '0px';
+        }
+
+        console.log('Nuovo valore del parametro top:', svgElement.style.top);
+
+    });
+
 
 }
