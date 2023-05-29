@@ -490,7 +490,7 @@ window.onload = (event) => {
                 div_consegna.style.color = 'black';
             } else {
                 svgElement.style.top = '0px';
-                // div_consegna.style.color = 'white';
+                div_consegna.style.color = 'white';
     
             }
     
