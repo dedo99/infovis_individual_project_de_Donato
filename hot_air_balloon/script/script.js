@@ -1,69 +1,78 @@
-
+// VARIABILI DATASET
 // pos_x -> la posizione orizzontale della mongolfiera
 // pos_y -> la posizione verticale della mongolfiera
 // balloon_size -> la grandezza del pallone della mongolfiera
 // basket_size -> la grandezza del cesto della mongolfiera
 // color -> il colore della mongolfiera
 
-var dataSet = [
-    {"pos_x": 50, "pos_y": 150, "balloon_size": 80, "basket_size": 60, "color": 80},
-    {"pos_x": 200, "pos_y": 50, "balloon_size": 100, "basket_size": 80, "color": 0},
-    {"pos_x": 600, "pos_y": 50, "balloon_size": 60, "basket_size": 50, "color": 150},
-    {"pos_x": 400, "pos_y": 400, "balloon_size": 120, "basket_size": 70, "color": 50},
-    {"pos_x": 100, "pos_y": 600, "balloon_size": 70, "basket_size": 50, "color": 200},
-    {"pos_x": 75, "pos_y": 50, "balloon_size": 90, "basket_size": 60, "color": 100},
-    {"pos_x": 300, "pos_y": 245, "balloon_size": 80, "basket_size": 70, "color": 180},
-    {"pos_x": 600, "pos_y": 400, "balloon_size": 110, "basket_size": 80, "color": 20},
-    {"pos_x": 175, "pos_y": 300, "balloon_size": 60, "basket_size": 50, "color": 230},
-    {"pos_x": 200, "pos_y": 500, "balloon_size": 100, "basket_size": 70, "color": 120}
-]
 
-// Dimensioni della pagina del browser
-var windowWidth = document.documentElement.clientWidth;
-var windowHeight = document.documentElement.clientHeight;
+// VARIABILI GLOBALI
+var colorScale;
+var xScale;
+var yScale;
+var dimBalloonSize;
+var dimBasketSize;
+var maxRadius;
+var maxWidth_basket;
+var maxHeight_basket;
+var maxHeight;
+var maxWidth;
 
-console.log("Window width: " + windowWidth);
-console.log("Window height: " + windowHeight);
 
-// Ottenere i valori massimi per pos_x e pos_y
-var maxPosX = d3.max(dataSet, function(d) { return d.pos_x; });
-var maxPosY = d3.max(dataSet, function(d) { return d.pos_y; });
-var maxBalloon_size = d3.max(dataSet, function(d) { return d.balloon_size; });
-var maxBasket_size = d3.max(dataSet, function(d) { return d.basket_size; });
+// funzione di setup di tutte le dimensioni necessarie per disegnare gli oggetti
+// in maniera proporzionata rispetto alla finestra del browser
+function setupDraw(dataSet){
 
-if (windowWidth > 1000){
-    // scalatura delle dimensioni del pallone e del cesto
-    var dimBalloonSize = d3.scaleLinear().domain([0, maxBalloon_size]).range([0, windowWidth/14]);
-    var dimBasketSize = d3.scaleLinear().domain([0, maxBasket_size]).range([0, windowWidth/14]);
-    console.log("Maggiore di 1000")
-} else{
-    // scalatura delle dimensioni del pallone e del cesto
-    var dimBalloonSize = d3.scaleLinear().domain([0, maxBalloon_size]).range([0, windowWidth/10]);
-    var dimBasketSize = d3.scaleLinear().domain([0, maxBasket_size]).range([0, windowWidth/10]);
-    console.log("Minore di 1000")
+    // Dimensioni della pagina del browser
+    var windowWidth = document.documentElement.clientWidth;
+    var windowHeight = document.documentElement.clientHeight;
+
+    console.log("Window width: " + windowWidth);
+    console.log("Window height: " + windowHeight);
+
+    // Ottenere i valori massimi per pos_x e pos_y
+    var maxPosX = d3.max(dataSet, function(d) { return d.pos_x; });
+    var maxPosY = d3.max(dataSet, function(d) { return d.pos_y; });
+    var maxBalloon_size = d3.max(dataSet, function(d) { return d.balloon_size; });
+    var maxBasket_size = d3.max(dataSet, function(d) { return d.basket_size; });
+
+    if (windowWidth > 1000){
+        // scalatura delle dimensioni del pallone e del cesto
+        dimBalloonSize = d3.scaleLinear().domain([0, maxBalloon_size]).range([0, windowWidth/14]);
+        dimBasketSize = d3.scaleLinear().domain([0, maxBasket_size]).range([0, windowWidth/14]);
+        console.log("Maggiore di 1000")
+    } else{
+        // scalatura delle dimensioni del pallone e del cesto
+        dimBalloonSize = d3.scaleLinear().domain([0, maxBalloon_size]).range([0, windowWidth/10]);
+        dimBasketSize = d3.scaleLinear().domain([0, maxBasket_size]).range([0, windowWidth/10]);
+        console.log("Minore di 1000")
+    }
+
+
+    // scala di colori dell'arcobaleno compresi tra i valori 0 e 255
+    colorScale = d3.scaleSequential(d3.interpolateRainbow).domain([0, 255]);
+
+    // calcolo delle dimensioni maggiori per il raggio, altezza e largezza del cesto
+    maxRadius = dimBalloonSize(maxBalloon_size);
+    maxWidth_basket = dimBasketSize(maxBasket_size);
+    maxHeight_basket = dimBasketSize(maxBasket_size)/3;
+
+    // massima altezza dell'elemento svg 
+    maxHeight = (maxRadius*2) + maxHeight_basket + 70;
+    maxWidth = Math.max(maxRadius*2, maxWidth_basket) + 20;
+
+
+    // mapping su scala lineare dei valori asse X in input sulla base
+    // della dimensione orizzontale della finistra
+    xScale = d3.scaleLinear().domain([0, maxPosX]).range([0, windowWidth - maxWidth*1.2]);
+
+    // mapping su scala lineare dei valori asse Y in input sulla base
+    // della dimensione verticale della finistra
+    yScale = d3.scaleLinear().domain([0, maxPosY]).range([0, windowHeight - maxHeight]);
+
+
 }
 
-
-// scala di colori dell'arcobaleno compresi tra i valori 0 e 255
-const colorScale = d3.scaleSequential(d3.interpolateRainbow).domain([0, 255]);
-
-// calcolo delle dimensioni maggiori per il raggio, altezza e largezza del cesto
-var maxRadius = dimBalloonSize(maxBalloon_size);
-var maxWidth_basket = dimBasketSize(maxBasket_size);
-var maxHeight_basket = dimBasketSize(maxBasket_size)/3;
-
-// massima altezza dell'elemento svg 
-var maxHeight = (maxRadius*2) + maxHeight_basket + 70;
-var maxWidth = Math.max(maxRadius*2, maxWidth_basket) + 20;
-
-
-// mapping su scala lineare dei valori asse X in input sulla base
-// della dimensione orizzontale della finistra
-const xScale = d3.scaleLinear().domain([0, maxPosX]).range([0, windowWidth - maxWidth*1.2]);
-
-// mapping su scala lineare dei valori asse Y in input sulla base
-// della dimensione verticale della finistra
-const yScale = d3.scaleLinear().domain([0, maxPosY]).range([0, windowHeight - maxHeight]);
 
 
 
@@ -71,11 +80,11 @@ const yScale = d3.scaleLinear().domain([0, maxPosY]).range([0, windowHeight - ma
 ////////// EVENT LISTENER ///////////
 /////////////////////////////////////
 
+// Quando viene avvertita una modifica della dimensione della 
+// finestra della pagina viene ricaricata e settata con i nuovi parametri
 window.addEventListener('resize', function () { 
-    window.location.reload(); 
+    window.location.reload();
 });
-
-
 
 
 function change_attributesValue_Balloon(index_one, index_two){
@@ -389,6 +398,7 @@ function update_draw(svgElement){
 }
   
 
+var dataSet;
 
 var svgElem;
 
@@ -398,85 +408,104 @@ var svgElem;
 
 window.onload = (event) => {  
 
-    var div = document.getElementById('main_svg');
+    fetch('./data/dataset.json')
+    .then(response => response.json())
+    .then(data => {
+        // Ora dataSet conterrà i dati del file JSON
+        dataSet = data;
+        console.log(dataSet);
 
-    div.style.width = document.documentElement.clientWidth + 'px';
-    div.style.height = document.documentElement.clientHeight + 'px';
+        // crea tutte le impostazioni per la visualizzazione
+        setupDraw(dataSet);
+        
+        var div = document.getElementById('main_svg');
 
-
+        div.style.width = document.documentElement.clientWidth + 'px';
+        div.style.height = document.documentElement.clientHeight + 'px';
     
-    // Carica il file SVG tramite fetch e inserisce le mongolfiere nel DOM
-    fetch("./figures/custom_details_hot_air_balloon.svg")
-    .then(response => response.text())
-    .then(svgText => {
-
-        // Il testo viene quindi analizzato come un documento SVG
-        // utilizzando DOMParser, e l'elemento SVG risultante viene 
-        // inserito all'interno del div 
-        const parser = new DOMParser();
-        const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
-        const svgElement = svgDoc.documentElement;
-        svgElem = svgElement;
-        console.log(svgElement);
-
-        update_draw(svgElement);
-
-        intro_animation();
-
+    
+        
+        // Carica il file SVG tramite fetch e inserisce le mongolfiere nel DOM
+        fetch("./figures/custom_details_hot_air_balloon.svg")
+        .then(response => response.text())
+        .then(svgText => {
+    
+            // Il testo viene quindi analizzato come un documento SVG
+            // utilizzando DOMParser, e l'elemento SVG risultante viene 
+            // inserito all'interno del div 
+            const parser = new DOMParser();
+            const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+            const svgElement = svgDoc.documentElement;
+            svgElem = svgElement;
+            console.log(svgElement);
+    
+            update_draw(svgElement);
+    
+            intro_animation();
+    
+        });
+    
+    
+        // ------------------------------------------------------------------
+        // Individuare quando viene selezionato qualche oggetto mongolfiera
+        // ------------------------------------------------------------------
+        var baloon_selection = document.getElementsByClassName('baloon');
+        
+        setTimeout(() => {
+    
+            for(let i = 0; i < baloon_selection.length; i++) {
+                baloon_selection[i].addEventListener("click", () => {
+                    selection_interaction_element(i);
+                });
+            }
+    
+        }, dataSet.length * 100);
+    
+    
+        // ------------------------------------------------------------------
+        // Gestione comparsa finistra con descrizione per task affrontato
+        // ------------------------------------------------------------------
+    
+        var consegna = document.getElementById("consegna");
+    
+        consegna.addEventListener('click', () => {
+            // Ottenere il riferimento all'elemento <svg> utilizzando l'ID
+            var svgElement = document.getElementById('main_svg');
+    
+            // Ottenere il riferimento all'elemento <div> utilizzando l'ID o un altro selettore
+            var div_consegna = document.getElementById('div_consegna');
+    
+            // Ottenere l'oggetto che rappresenta i valori di stile calcolati
+            var consegnaStyle = window.getComputedStyle(div_consegna);
+    
+            // Ottenere i valori di stile specifici
+            var height_consegna = consegnaStyle.height;
+    
+            // Ottenere il valore corrente del parametro top
+            var currentTop = svgElement.style.top;
+    
+            if (currentTop == '0px'){
+                // Modificare il valore del parametro top
+                svgElement.style.top = height_consegna;
+                div_consegna.style.color = 'black'
+            } else {
+                svgElement.style.top = '0px';
+                div_consegna.style.color = 'white'
+    
+            }
+    
+            console.log('Nuovo valore del parametro top:', svgElement.style.top);
+    
+        });
+    
+        
+    })
+    .catch(error => {
+        // Gestione dell'errore nel caso in cui il recupero dei dati JSON fallisca
+        console.error('Errore nel recupero dei dati JSON:', error);
     });
 
 
-    // ------------------------------------------------------------------
-    // Individuare quando viene selezionato qualche oggetto mongolfiera
-    // ------------------------------------------------------------------
-    var baloon_selection = document.getElementsByClassName('baloon');
-    
-    setTimeout(() => {
-
-        for(let i = 0; i < baloon_selection.length; i++) {
-            baloon_selection[i].addEventListener("click", () => {
-                selection_interaction_element(i);
-            });
-        }
-
-    }, dataSet.length * 100);
-
-
-    // ------------------------------------------------------------------
-    // Gestione comparsa finistra con descrizione per task affrontato
-    // ------------------------------------------------------------------
-
-    var consegna = document.getElementById("consegna");
-
-    consegna.addEventListener('click', () => {
-        // Ottenere il riferimento all'elemento <svg> utilizzando l'ID
-        var svgElement = document.getElementById('main_svg');
-
-        // Ottenere il riferimento all'elemento <div> utilizzando l'ID o un altro selettore
-        var div_consegna = document.getElementById('div_consegna');
-
-        // Ottenere l'oggetto che rappresenta i valori di stile calcolati
-        var consegnaStyle = window.getComputedStyle(div_consegna);
-
-        // Ottenere i valori di stile specifici
-        var height_consegna = consegnaStyle.height;
-
-        // Ottenere il valore corrente del parametro top
-        var currentTop = svgElement.style.top;
-
-        if (currentTop == '0px'){
-            // Modificare il valore del parametro top
-            svgElement.style.top = height_consegna;
-            div_consegna.style.color = 'black'
-        } else {
-            svgElement.style.top = '0px';
-            div_consegna.style.color = 'white'
-
-        }
-
-        console.log('Nuovo valore del parametro top:', svgElement.style.top);
-
-    });
 
 
 }

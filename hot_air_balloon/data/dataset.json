@@ -1,6 +1,6 @@
 [
-    {"pos_x": 50, "pos_y": 150, "balloon_size": 80, "basket_size": 60, "color": 80},
-    {"pos_x": 200, "pos_y": 50, "balloon_size": 100, "basket_size": 80, "color": 0},
+    {"pos_x": 50, "pos_y": 250, "balloon_size": 80, "basket_size": 60, "color": 80},
+    {"pos_x": 200, "pos_y": 50, "balloon_size": 100, "basket_size": 80, "color": 90},
     {"pos_x": 600, "pos_y": 50, "balloon_size": 60, "basket_size": 50, "color": 150},
     {"pos_x": 400, "pos_y": 400, "balloon_size": 120, "basket_size": 70, "color": 50},
     {"pos_x": 100, "pos_y": 600, "balloon_size": 70, "basket_size": 50, "color": 200},
