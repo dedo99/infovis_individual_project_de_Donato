@@ -487,10 +487,10 @@ window.onload = (event) => {
             if (currentTop == '0px'){
                 // Modificare il valore del parametro top
                 svgElement.style.top = height_consegna;
-                div_consegna.style.color = 'black'
+                div_consegna.style.color = 'black';
             } else {
                 svgElement.style.top = '0px';
-                div_consegna.style.color = 'white'
+                // div_consegna.style.color = 'white';
     
             }
     
