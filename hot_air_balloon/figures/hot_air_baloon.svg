@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<svg viewBox="152.698 86.108 169.346 231.917" xmlns="http://www.w3.org/2000/svg">
-  <g>
-    <circle style="stroke: rgb(0, 0, 0);" transform="matrix(0.459076, 0.888397, -0.870852, 0.45001, 292.160767, -75.23307)" cx="194.02986583000262" cy="166.18830224196967" r="79.671"/>
-    <line style="stroke: rgb(0, 0, 0);" x1="258.196" y1="248.565" x2="236.956" y2="276.694"/>
-    <line style="stroke: rgb(0, 0, 0);" x1="236.095" y1="275.833" x2="214.855" y2="247.704"/>
-  </g>
-  <rect x="190.01" y="275.545" width="100" height="33" style="stroke: rgb(0, 0, 0);" rx="12.055" ry="12.055"/>
-</svg>

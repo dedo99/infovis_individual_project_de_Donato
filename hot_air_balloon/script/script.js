@@ -416,7 +416,7 @@ var svgElem;
 // ----------------------------------------------------------------------
 
 // funzione che viene richiamata dopo il caricamento della pagine e si occupa
-//  di caricare il file json con i dati necessati per graficare le mongolfiere
+//  di caricare il file json con i dati e il file svg necessari per graficare le mongolfiere
 window.onload = (event) => {  
 
     fetch('./data/dataset.json')
