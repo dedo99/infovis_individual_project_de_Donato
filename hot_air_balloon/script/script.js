@@ -19,6 +19,23 @@ var maxHeight;
 var maxWidth;
 
 
+
+/////////////////////////////////////
+////////// EVENT LISTENER ///////////
+/////////////////////////////////////
+
+// Quando viene avvertita una modifica della dimensione della 
+// finestra della pagina viene ricaricata e settata con i nuovi parametri
+window.addEventListener('resize', function () { 
+    window.location.reload();
+});
+
+
+
+/////////////////////////////////////
+//////// AUXILIARY FUNCTIONS ////////
+/////////////////////////////////////
+
 // funzione di setup di tutte le dimensioni necessarie per disegnare gli oggetti
 // in maniera proporzionata rispetto alla finestra del browser
 function setupDraw(dataSet){
@@ -37,12 +54,12 @@ function setupDraw(dataSet){
     var maxBasket_size = d3.max(dataSet, function(d) { return d.basket_size; });
 
     if (windowWidth > 1000){
-        // scalatura delle dimensioni del pallone e del cesto
+        // scalatura delle dimensioni del pallone e del cesto con finestra > 1000 px
         dimBalloonSize = d3.scaleLinear().domain([0, maxBalloon_size]).range([0, windowWidth/14]);
         dimBasketSize = d3.scaleLinear().domain([0, maxBasket_size]).range([0, windowWidth/14]);
         console.log("Maggiore di 1000")
     } else{
-        // scalatura delle dimensioni del pallone e del cesto
+        // scalatura delle dimensioni del pallone e del cesto con finestra < 1000 px
         dimBalloonSize = d3.scaleLinear().domain([0, maxBalloon_size]).range([0, windowWidth/10]);
         dimBasketSize = d3.scaleLinear().domain([0, maxBasket_size]).range([0, windowWidth/10]);
         console.log("Minore di 1000")
@@ -74,19 +91,8 @@ function setupDraw(dataSet){
 }
 
 
-
-
-/////////////////////////////////////
-////////// EVENT LISTENER ///////////
-/////////////////////////////////////
-
-// Quando viene avvertita una modifica della dimensione della 
-// finestra della pagina viene ricaricata e settata con i nuovi parametri
-window.addEventListener('resize', function () { 
-    window.location.reload();
-});
-
-
+// funzione che si occupa dello scambio dei parametri relativi  
+// alle dimensioni del cesto e del pallone della mongolfiera
 function change_attributesValue_Balloon(index_one, index_two){
     element_one = dataSet[index_one];
     element_two = dataSet[index_two];
@@ -110,6 +116,8 @@ function change_attributesValue_Balloon(index_one, index_two){
 
 var is_Animation = false;
 
+// funzione che si occupa identificare quali mongolfiere vengono selezionate
+// prima di effettuare lo scambio dei parametri e gestisce anche la deselezione
 function selection_interaction_element(index){
 
     if (is_Animation){
@@ -157,7 +165,7 @@ function selection_interaction_element(index){
     
 }
 
-
+// funzione che si occupa dell'animazione delle mongolfiere al caricamento della pagina
 function intro_animation(){
     var baloons = d3.selectAll(".baloon");
     
@@ -172,7 +180,8 @@ function intro_animation(){
 
 }
 
-
+// funzione che si occupa dell'aggiornamento grafico delle mongolfiere
+//  dopo lo scambio dei parametri utilizzando delle transazioni fluide
 function update_draw(svgElement){
 
     const divElement = d3.select("#main_svg");
@@ -406,6 +415,8 @@ var svgElem;
 // ---------------------CARICAMENTO DELLA PAGINA-------------------------
 // ----------------------------------------------------------------------
 
+// funzione che viene richiamata dopo il caricamento della pagine e si occupa
+//  di caricare il file json con i dati necessati per graficare le mongolfiere
 window.onload = (event) => {  
 
     fetch('./data/dataset.json')
